@@ -1,37 +1,74 @@
 #pip install requests and re
 # github.com/kendalled
+### possible regexp: [^\s@<>]+@[^\s@<>]+\.[^\s@<>]+
+###  Backup regexp: '[\w.]+@[\w.]+'
+
 import requests
 import re
-import time
 
-urls = ['https://mermaidmelissa.com/', 'https://lapelpinsandcoins.com', 'https://signaturecoins.com', 'https://allaboutpins.com']
-start_time = time.time()
+import pandas as pd
+
+# Negative Email Endings
+negatives = ['example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
+
+# Reads website column, initializes counter variable
+df = pd.read_csv('./Argo.csv')
+urls = df['website']
+counter = 0
+
+
 def get_email(url):
+    
     # Filtering Function
     def filter_func(x):
         ind = x.find('@')+1
-        return not (x[ind:ind+1].isdigit())
+        print('filtering...')
+        return not (x[ind:] in negatives)
 
-    # Set URL and fetch HTML
-    # url = 'https://allaboutpins.com'
+
+    # Set Headers 
+
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-    site = requests.get(url, headers=headers).content.decode()
-
-    # Regexp match for x@x.com, filter out duplicates and JS packages
-    possible_emails = re.findall('[\w.]+@[\w.]+', site)
-    res = list(set(filter(filter_func,possible_emails)))
-
-    # Print Output
-    print('Fetched Web Page.\nSorting...\n')
     
-    print('RESULT:')
-    print(res)
-          
+    
+    # Get HTML, regexp match, filter out bad emails
+    try:
+        
+        site = requests.get(url, verify=True, headers=headers, timeout=(2, 2)).content.decode()
+        possible_emails = re.findall('[A-Za-z0-9._%+-]{3,}@[a-z]{3,}\.[a-z]{2,}(?:\.[a-z]{2,})?', site)
+        print('Fetched Web Page.\n')
+        res = list(set(filter(filter_func,possible_emails)))
 
-    ### possible regexp: [^\s@<>]+@[^\s@<>]+\.[^\s@<>]+
+      
+    except:
+        print('Web Page Not Found. Deleting...')
+        return []
+    
+    # TODO: Delete row if no email found
+    if(not res):
+        print('No Emails Found. Deleting...')
+        return []
 
-for link in urls:
-    get_email(link)
-    print('------------------------')
+    # TODO: Append to new csv if found
+    else:
+        print('Emails:\n')
+        print(res)
+        
+        return res
 
-print("My program took", time.time() - start_time, "to run")
+    return []
+
+    
+if __name__ == "__main__":
+    for link in urls:
+        print(link)
+        email = get_email(link)
+        if(email):
+            counter += len(email)
+        
+        print('------------------------')
+        print(str(counter) + ' Email(s) found so far.')
+        print('------------------------')
+
+
+
