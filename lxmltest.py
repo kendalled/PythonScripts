@@ -1,4 +1,4 @@
-#pip install requests and re
+
 # github.com/kendalled
 ### possible regexp: [^\s@<>]+@[^\s@<>]+\.[^\s@<>]+
 ###  Backup regexp: '[\w.]+@[\w.]+'
