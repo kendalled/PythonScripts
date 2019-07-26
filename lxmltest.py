@@ -35,7 +35,7 @@ def get_email(url):
     try:
         
         site = requests.get(url, verify=True, headers=headers, timeout=(2, 2)).content.decode()
-        possible_emails = re.findall('[A-Za-z0-9._%+-]{3,}@[a-z]{3,}\.[a-z]{2,}(?:\.[a-z]{2,})?', site)
+        possible_emails = re.findall(r'[A-Za-z0-9._%+-]{3,}@[a-z]{3,}\.[a-z]{2,}(?:\.[a-z]{2,})?', site)
         print('Fetched Web Page.\n')
         res = list(set(filter(filter_func,possible_emails)))
 
