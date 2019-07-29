@@ -1,4 +1,4 @@
-
+# GetScraped V2.5.1
 # github.com/kendalled
 ### possible regexp: [^\s@<>]+@[^\s@<>]+\.[^\s@<>]+
 ###  Backup regexp: '[\w.]+@[\w.]+'
@@ -8,18 +8,21 @@ import re
 import unicodecsv as csv
 import pandas as pd
 
-def cleanup_dupes(y):
-  return list(dict.fromkeys(y))
+
 
 # Negative Email Endings
 negatives = ['sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
 
 # Reads website column, initializes counter variable
 df = pd.read_csv('./Argo.csv')
-urls = cleanup_dupes(df['website'])
+urls = list(dict.fromkeys(df['website']))
 counter = 0
 final_list = []
 print_list = []
+
+ # Set Headers 
+
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 
 
 def get_email(url):
@@ -31,11 +34,6 @@ def get_email(url):
         return not (x[ind:] in negatives)
 
 
-    # Set Headers 
-
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-    
-    
     # Get HTML, regexp match, filter out bad emails
     try:
         
@@ -70,12 +68,12 @@ if __name__ == "__main__":
         print(link)
         email = get_email(link)
         if(email):
-            for mail in email:
+            for mail in [elem.lower() for elem in email]:
                 final_list.append(mail)
             
             counter += len(email)
             
-        if(counter >= 501):
+        if(counter >= 101):
             break
         print('------------------------')
         print(str(counter) + ' Email(s) found so far.')
