@@ -8,14 +8,18 @@ import re
 import unicodecsv as csv
 import pandas as pd
 
+def cleanup_dupes(y):
+  return list(dict.fromkeys(y))
+
 # Negative Email Endings
-negatives = ['example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
+negatives = ['sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
 
 # Reads website column, initializes counter variable
 df = pd.read_csv('./Argo.csv')
-urls = df['website']
+urls = cleanup_dupes(df['website'])
 counter = 0
 final_list = []
+print_list = []
 
 
 def get_email(url):
@@ -45,18 +49,18 @@ def get_email(url):
         print('Web Page Not Found. Deleting...')
         return []
     
-    # TODO: Delete row if no email found
+    
     if(not res):
         print('No Emails Found. Deleting...')
         return []
 
-    # TODO: Append to new csv if found
+   
     else:
         
         print('Emails:\n')
         print(res)
         
-        return {'email': res}
+        return res
 
     return []
 
@@ -66,22 +70,26 @@ if __name__ == "__main__":
         print(link)
         email = get_email(link)
         if(email):
+            for mail in email:
+                final_list.append(mail)
             
-            final_list.append(email)
-            counter += len(email['email'])
+            counter += len(email)
             
-        if(counter >= 1001):
+        if(counter >= 501):
             break
         print('------------------------')
         print(str(counter) + ' Email(s) found so far.')
         print('------------------------')
 
     with open('Argo-AL-Scraped-Emails.csv', 'wb') as csvfile:
+        final_list = list(set(final_list))
+        for i in final_list:
+            print_list.append({'email': i})
         fieldnames = ['email']
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames, quoting=csv.QUOTE_ALL)
         writer.writeheader()
 
-        for data in final_list:
+        for data in print_list:
             writer.writerow(data)
 
     print('File written!')
