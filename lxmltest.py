@@ -5,7 +5,7 @@
 
 import requests
 import re
-
+import unicodecsv as csv
 import pandas as pd
 
 # Negative Email Endings
@@ -15,6 +15,7 @@ negatives = ['example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com',
 df = pd.read_csv('./Argo.csv')
 urls = df['website']
 counter = 0
+final_list = []
 
 
 def get_email(url):
@@ -51,10 +52,11 @@ def get_email(url):
 
     # TODO: Append to new csv if found
     else:
+        
         print('Emails:\n')
         print(res)
         
-        return res
+        return {'email': res}
 
     return []
 
@@ -64,11 +66,26 @@ if __name__ == "__main__":
         print(link)
         email = get_email(link)
         if(email):
-            counter += len(email)
-        
+            
+            final_list.append(email)
+            counter += len(email['email'])
+            
+        if(counter >= 1001):
+            break
         print('------------------------')
         print(str(counter) + ' Email(s) found so far.')
         print('------------------------')
+
+    with open('Argo-AL-Scraped-Emails.csv', 'wb') as csvfile:
+        fieldnames = ['email']
+        writer = csv.DictWriter(csvfile, fieldnames = fieldnames, quoting=csv.QUOTE_ALL)
+        writer.writeheader()
+
+        for data in final_list:
+            writer.writerow(data)
+
+    print('File written!')
+            
 
 
 
