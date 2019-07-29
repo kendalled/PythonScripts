@@ -11,7 +11,7 @@ import pandas as pd
 
 
 # Negative Email Endings
-negatives = ['sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
+negatives = ['domain.xxx','sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
 
 # Reads website column, initializes counter variable
 df = pd.read_csv('./mergedORL.csv')
@@ -73,12 +73,13 @@ if __name__ == "__main__":
 
             counter += len(email)
 
-        
+        if(counter >= 1501):
+            break
         print('------------------------')
         print(str(counter) + ' Email(s) found so far.')
         print('------------------------')
 
-    with open('Argo-AL-Scraped-Emails.csv', 'wb') as csvfile:
+    with open('ORL-Emails.csv', 'wb') as csvfile:
         final_list = list(set(final_list))
         for i in final_list:
             print_list.append({'email': i})
