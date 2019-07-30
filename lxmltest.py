@@ -14,7 +14,7 @@ import pandas as pd
 negatives = ['domain.xxx','sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
 
 # Reads website column, initializes counter variable
-df = pd.read_csv('./mergedORL.csv')
+df = pd.read_csv('./phoenix.csv')
 urls = list(dict.fromkeys(df['website']))
 counter = 0
 final_list = []
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         print(str(counter) + ' Email(s) found so far.')
         print('------------------------')
 
-    with open('ORL-Emails.csv', 'wb') as csvfile:
+    with open('PHX-Emails.csv', 'wb') as csvfile:
         final_list = list(set(final_list))
         for i in final_list:
             print_list.append({'email': i})
