@@ -8,10 +8,9 @@ import re
 import unicodecsv as csv
 import pandas as pd
 
-
-
 # Negative Email Endings
-negatives = ['domain.xxx','sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
+#TODO: remove %20 from beginning
+negatives = ['youremail.com','sample.com','yoursite.com','internet.com','companysite.com','sentry.io','domain.xxx','sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
 
 # Reads website column, initializes counter variable
 df = pd.read_csv('./phoenix.csv')
@@ -20,7 +19,7 @@ counter = 0
 final_list = []
 print_list = []
 
- # Set Headers
+# Set Response Headers
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 
@@ -42,24 +41,23 @@ def get_email(url):
         print('Fetched Web Page.\n')
         res = list(set(filter(filter_func,possible_emails)))
 
-
+    # Fail case 1
     except:
         print('Web Page Not Found. Deleting...')
         return []
 
-
+    # Fail case 2
     if(not res):
         print('No Emails Found. Deleting...')
         return []
 
-
+    # Success
     else:
-
         print('Emails:\n')
         print(res)
 
         return res
-
+    # Backup Fail case
     return []
 
 
