@@ -13,7 +13,7 @@ import pandas as pd
 negatives = ['youremail.com','sample.com','yoursite.com','internet.com','companysite.com','sentry.io','domain.xxx','sentry.wixpress.com', 'example.com', 'domain.com', 'address.com', 'xxx.xxx', 'email.com', 'yourdomain.com']
 
 # Reads website column, initializes counter variable
-df = pd.read_csv('./phoenix.csv')
+df = pd.read_csv('./Allgood-AL.csv')
 urls = list(dict.fromkeys(df['website']))
 counter = 0
 final_list = []
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
             counter += len(email)
 
-        if(counter >= 1501):
+        if(counter >= 2001):
             break
         print('------------------------')
         print(str(counter) + ' Email(s) found so far.')
